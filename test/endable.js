@@ -1,43 +1,35 @@
 
 var tape = require('tape')
-var pull = require('pull-stream')
+const { pipeline, filter, collect } = require('streaming-iterables')
 var endable = require('../endable')
 
-tape('simple', function (t) {
-
+tape('simple', async function (t) {
   t.plan(2)
 
   var e1 = endable(-1)
   var e2 = endable(-1)
 
-  function onEnd () {
-    console.log('on end')
-  }
+  const [ ary0, ary1 ] = await Promise.all([
+    pipeline(
+      () => [1, 2, 3],
+      e1,
+      filter(function (n) {
+        if (n !== -1) return true
+        e2.end()
+      }),
+      collect
+    ),
+    pipeline(
+      () => [1, 2, 3],
+      e2,
+      filter(function (n) {
+        if (n !== -1) return true
+        e1.end()
+      }),
+      collect
+    )
+  ])
 
-  pull(
-    pull.values([1,2,3]),
-    e1,
-    pull.filter(function (n) {
-      if(n !== -1) return true
-      e2.end()
-    }),
-    pull.collect(function (err, ary) {
-      if(err) throw err
-      t.deepEqual(ary, [1,2,3])
-    })
-  )
-
-
-  pull(
-    pull.values([1,2,3]),
-    e2,
-    pull.filter(function (n) {
-      if(n !== -1) return true
-      e1.end()
-    }),
-    pull.collect(function (err, ary) {
-      if(err) throw err
-      t.deepEqual(ary, [1,2,3])
-    })
-  )
+  t.deepEqual(ary0, [1, 2, 3])
+  t.deepEqual(ary1, [1, 2, 3])
 })
