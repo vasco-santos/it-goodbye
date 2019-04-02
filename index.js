@@ -1,7 +1,7 @@
 const endable = require('./endable')
 
 module.exports = (stream, goodbye) => {
-  goodbye = goodbye || 'GOODBYE'
+  goodbye = Buffer.from(goodbye || 'GOODBYE')
   const e = endable(goodbye)
 
   return {
@@ -12,8 +12,17 @@ module.exports = (stream, goodbye) => {
     sink: source => stream.sink((async function * () {
       // when the goodbye is received, allow the source to end.
       for await (const chunk of source) {
-        if (chunk !== goodbye) yield chunk
-        e.end()
+        const buff = Buffer.from(chunk)
+        const done = buff.slice(-goodbye.length).equals(goodbye)
+        if (done) {
+          const remaining = buff.length - goodbye.length
+          if (remaining > 0) {
+            yield buff.slice(0, remaining)
+          }
+          e.end()
+        } else {
+          yield buff
+        }
       }
     })())
   }
