@@ -1,6 +1,6 @@
 {
   "name": "it-goodbye",
-  "description": "",
+  "description": "Add a goodbye handshake to a duplex async iterable",
   "version": "0.0.0",
   "homepage": "https://github.com/alanshaw/it-goodbye",
   "repository": {
