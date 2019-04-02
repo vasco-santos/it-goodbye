@@ -21,12 +21,11 @@ the stream uses. The codec should probably be applied outside of `it-goodbye`.
 
 ``` js
 var goodbye = require('it-goodbye')
-var serializer = require('it-serializer')
 
 // a duplex stream from somewhere...
 var duplex = whatever.createStream()
 
-return serializer(goodbye(duplex, 'GoodBye'))
+return goodbye(duplex, 'GoodBye')
 ```
 
 ## License
