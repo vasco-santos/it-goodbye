@@ -1,6 +1,6 @@
-# pull-goodbye
+# it-goodbye
 
-Add a goodbye handshake to a duplex pull-stream.
+Add a goodbye handshake to a [duplex async iterable](https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#duplex-it).
 
 In a uniplex stream, the end event signifies the end of the stream.
 But a duplex stream, it's a little more complicated - there are two paired
@@ -12,18 +12,18 @@ terminated. Humans deal with this problem by moving stream termination
 into the "application" layer - it's polite to say "goodbye", and to wait to receive
 "goodbye" before call termination.
 
-## example
+## Example
 
-given another duplex stream, wrap it with `pull-goodbye`.
-`goodbye(stream, goodbye_message)` takes a duplex stream and a message,
-(by default, the string `"GOODBYE"`, this must be encodable whatever codec
-the stream uses. The codec should probably be applied outside of `pull-goodbye`
+Given another duplex stream, wrap it with `it-goodbye`.
+`goodbye(stream, goodbye_message)` takes a duplex stream and a message
+(by default, the string `"GOODBYE"`), this must be encodable whatever codec
+the stream uses. The codec should probably be applied outside of `it-goodbye`.
 
 ``` js
-var goodbye = require('pull-goodbye')
-var serializer = require('pull-serializer')
+var goodbye = require('it-goodbye')
+var serializer = require('it-serializer')
 
-//a duplex stream from somewhere...
+// a duplex stream from somewhere...
 var duplex = whatever.createStream()
 
 return serializer(goodbye(duplex, 'GoodBye'))
