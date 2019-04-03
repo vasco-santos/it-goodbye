@@ -16,7 +16,8 @@
     "tape": "^4.6.3"
   },
   "scripts": {
-    "test": "set -e; for t in test/*.js; do node $t; done"
+    "test": "set -e; for t in test/*.js; do node $t; done",
+    "lint": "standard"
   },
   "author": "Alan Shaw",
   "license": "MIT"

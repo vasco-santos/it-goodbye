@@ -1,5 +1,9 @@
 # it-goodbye
 
+[![Build Status](https://travis-ci.org/alanshaw/it-pipe.svg?branch=master)](https://travis-ci.org/alanshaw/it-goodbye)
+[![dependencies Status](https://david-dm.org/alanshaw/it-pipe/status.svg)](https://david-dm.org/alanshaw/it-goodbye)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
 Add a goodbye handshake to a [duplex async iterable](https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#duplex-it).
 
 In a uniplex stream, the end event signifies the end of the stream.
