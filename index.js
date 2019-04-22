@@ -1,8 +1,10 @@
 const endable = require('./endable')
 
 module.exports = (stream, goodbye) => {
-  goodbye = Buffer.from(goodbye || 'GOODBYE')
+  goodbye = goodbye || Buffer.from('GOODBYE')
   const e = endable(goodbye)
+  const isBufferCompatible = Buffer.isBuffer(goodbye) || typeof goodbye === 'string'
+  const token = isBufferCompatible ? Buffer.from(goodbye) : goodbye
 
   return {
     // when the source ends,
@@ -11,17 +13,27 @@ module.exports = (stream, goodbye) => {
     source: e(stream.source),
     sink: source => stream.sink((async function * () {
       // when the goodbye is received, allow the source to end.
-      for await (const chunk of source) {
-        const buff = Buffer.from(chunk)
-        const done = buff.slice(-goodbye.length).equals(goodbye)
-        if (done) {
-          const remaining = buff.length - goodbye.length
-          if (remaining > 0) {
-            yield buff.slice(0, remaining)
+      if (isBufferCompatible) {
+        for await (const chunk of source) {
+          const buff = Buffer.from(chunk)
+          const done = buff.slice(-token.length).equals(token)
+          if (done) {
+            const remaining = buff.length - token.length
+            if (remaining > 0) {
+              yield buff.slice(0, remaining)
+            }
+            e.end()
+          } else {
+            yield buff
           }
-          e.end()
-        } else {
-          yield buff
+        }
+      } else {
+        for await (const chunk of source) {
+          if (chunk === goodbye) {
+            e.end()
+          } else {
+            yield chunk
+          }
         }
       }
     })())
