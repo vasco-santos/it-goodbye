@@ -5,10 +5,12 @@ const toPull = require('async-iterator-to-pull-stream')
 var goodbye = require('../')
 
 var client = {
-  async: ['hello', 'goodbye'],
-  source: ['stuff', 'bstuff'],
-  sink: ['things'],
-  duplex: ['suchstreamwow']
+  hello: 'async',
+  goodbye: 'async',
+  stuff: 'source',
+  bstuff: 'source',
+  things: 'sink',
+  suchstreamwow: 'duplex'
 }
 
 tape('duplex', function (t) {
