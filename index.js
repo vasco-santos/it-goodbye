@@ -1,3 +1,4 @@
+const { Buffer } = require('buffer')
 const endable = require('./endable')
 
 module.exports = (stream, goodbye) => {
